@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="connector_base_product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <page name="connector" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <page name="connector" position="inside">
+            	<group string="Magento Data">
+            		<group>
+	            		<field name="magento_length"/>
+	            		<field name="magento_width"/>
+	            		<field name="magento_height"/>
+	            		<field name="magento_weight"/>
+	            		<field name="watt"/>
+	            		<field name="capacity"/>
+            		</group>
+            		<group>
+	            		<field name="glue"/>
+	            		<field name="charger"/>
+	            		<field name="air_soft"/>
+	            		<field name="mpq"/>
+	            		<field name="low_safety_level"/>
+	            		<field name="show_in_po"/>
+	            		<field name="is_lipo"/>
+            		</group>
+                </group>
+                <group colspan="4" col="1">
+                	<field name="magento_product_url"/>
+               		<label for="magento_product_image_url" string="Magento Image URL"/>
+               		<div>
+	            		<field name="magento_product_image_url" class="oe_inline"/>
+	            		<button name="magento_product_image" type="object" string="Go to magento product image?" 
+	            				attrs="{'invisible':[('magento_product_image_url','=',False)]}" 
+	            				class="oe_link oe_inline"/>
+       				</div>
+               		<field name="magento_description"/>
+                </group>
+                <group string="Magento Bindings">
+                    <field name="magento_bind_ids" nolabel="1">
+                        <tree>
+                            <field name="backend_id"/>
+			                <field name="external_id"/>
+			                <field name="request_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_magento_product_form" model="ir.ui.view">
+        <field name="name">magento.product.product.form</field>
+        <field name="model">magento.product.product</field>
+        <field name="arch" type="xml">
+            <form string="Magento Product">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="external_id"/>
+                    <field name="request_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_product_tree" model="ir.ui.view">
+        <field name="name">magento.product.product.tree</field>
+        <field name="model">magento.product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Product">
+                <field name="backend_id"/>
+                <field name="external_id"/>
+                <field name="request_id"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
