@@ -31,7 +31,7 @@ class MagentoBinding(models.AbstractModel):
     ]
 
     @job(default_channel='root.magento')
-    @related_action(action='related_action_unwrap_binding')
+    @related_action(action='related_action_from_result')
     @api.model
     def process_record(self, backend, post=None):
         """ Process a Magento record """

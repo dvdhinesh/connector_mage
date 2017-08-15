@@ -65,21 +65,33 @@ class ProductImporter(Component):
         product.update({'request_id': post['data']['request_id']})
         return product
 
-    def result_message(self, request_id, magent_id, odoo_id):
-        return 'Request ID - {0}, Magento ID - {1}, Odoo ID - {2}'.format(request_id,
-                                                                          magent_id,
-                                                                          odoo_id)
-
     def run(self, post=None):
-
         self.magento_record = self._build_magento_data(post=post)
+        self.external_id = self.magento_record['ProductID']
+        lock_name = 'import({}, {}, {}, {})'.format(
+            self.backend_record._name,
+            self.backend_record.id,
+            self.work.model_name,
+            self.external_id,
+        )
+
+        binding = self._get_binding()
+
+        # Keep a lock on this import until the transaction is committed
+        # The lock is kept since we have detected that the informations
+        # will be updated into Odoo
+        self.advisory_lock_or_retry(lock_name)
 
         map_record = self._map_data()
 
-        record = self._create_data(map_record)
-        binding = self._create(record)
+        if binding:
+            record = self._update_data(map_record)
+            self._update(binding, record)
+        else:
+            record = self._create_data(map_record)
+            binding = self._create(record)
 
         self.binder.bind(self.magento_record['ProductID'], binding)
-        return self.result_message(binding.request_id,
-                                   binding.external_id,
-                                   binding.odoo_id.id)
+        return self._result_message(binding.request_id,
+                                    binding.external_id,
+                                    binding.odoo_id.id)

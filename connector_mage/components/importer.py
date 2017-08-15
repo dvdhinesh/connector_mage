@@ -62,6 +62,8 @@ class MagentoImporter(AbstractComponent):
         return map_record.values(for_create=True, **kwargs)
 
     def _create(self, data):
+        """ Create the OpenERP record """
+        # special check on data before import
         self._validate_data(data)
         model = self.model.with_context(connector_no_export=True)
         binding = model.create(data)
@@ -69,13 +71,23 @@ class MagentoImporter(AbstractComponent):
         return binding
 
     def _update_data(self, map_record, **kwargs):
-        return
+        return map_record.values(**kwargs)
 
     def _update(self, binding, data):
+        """ Update an OpenERP record """
+        # special check on data before import
+        self._validate_data(data)
+        binding.with_context(connector_no_export=True).write(data)
+        _logger.debug('%d updated from magento %s', binding, self.external_id)
         return
 
     def _after_import(self, binding):
         return
+
+    def _result_message(self, request_id, magent_id, odoo_id):
+        return 'Request ID - {0}, Magento ID - {1}, Odoo ID - {2}'.format(request_id,
+                                                                          magent_id,
+                                                                          odoo_id)
 
     def run(self, external_id, force=False):
         return

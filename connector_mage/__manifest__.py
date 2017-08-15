@@ -14,6 +14,7 @@
     'data': [
         'views/magento_backend_views.xml',
         'views/product_views.xml',
+        'views/partner_views.xml',
         'views/connector_magento_menu.xml',
     ],
     'installable': True,

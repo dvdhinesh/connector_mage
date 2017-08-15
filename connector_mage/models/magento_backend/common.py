@@ -39,3 +39,11 @@ class MagentoBackend(models.Model):
             backend, post=post
         )
         return True
+
+    @api.multi
+    def partner_job_creator(self, post=None):
+        backend = self.search([('base_backend', '=', True)])
+        self.env['magento.res.partner'].with_delay().process_record(
+            backend, post=post
+        )
+        return True
