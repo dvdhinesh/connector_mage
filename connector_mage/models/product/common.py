@@ -13,6 +13,7 @@ class MagentoProductProduct(models.Model):
                               required=True,
                               ondelete='restrict')
     request_id = fields.Char(string="Request ID")
+    magento_product_id = fields.Char(string="Magento ProductID")
 
 
 class ProductProduct(models.Model):

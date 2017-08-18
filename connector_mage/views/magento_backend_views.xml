@@ -21,9 +21,11 @@
                             </page>
                             <page name="advanced_configuration" string="Advanced Configuration">
 	                            <group>
-	                                <field name="default_category_id"/>
-	                                <field name="default_uom_id"/>
-	                                <field name="default_mage_image_url"/>
+	                                <field name="default_category_id" required="1"/>
+	                                <field name="default_uom_id" required="1"/>
+	                                <field name="default_tax_id" domain="[('type_tax_use','=','sale')]" required="1"/>
+	                                <field name="default_mage_image_url" required="1"/>
+	                                <field name="sale_prefix" placeholder="mag-" />
 	                            </group>
 	                        </page>
                         </notebook>

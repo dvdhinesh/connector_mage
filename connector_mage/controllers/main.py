@@ -31,3 +31,14 @@ class MagentoAPIPost(http.Controller):
             Backend = request.env['magento.backend']
             Backend.sudo().partner_job_creator(post=post)
         return '"response": "OK", "args": {0}, "post": {1}'.format(args, post)
+
+    @http.route('/connector-mage-order-post', type='http', auth="public", csrf=False)
+    def magento_order_post(self, *args, **post):
+        _logger.info('The controller magento_order_post is called.')
+        _logger.info(
+            '"response": "OK, "args": {0}, "post": {1}'.format(args, post))
+
+        if post:
+            Backend = request.env['magento.backend']
+            Backend.sudo().order_job_creator(post=post)
+        return '"response": "OK", "args": {0}, "post": {1}'.format(args, post)

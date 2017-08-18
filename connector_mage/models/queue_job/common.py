@@ -5,7 +5,8 @@ from odoo import api, models
 
 MODEL_MAPPING = {
     'magento.product.product': 'product.product',
-    'magento.res.partner': 'res.partner'
+    'magento.res.partner': 'res.partner',
+    'magento.sale.order': 'sale.order',
 }
 
 

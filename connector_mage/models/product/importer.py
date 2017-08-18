@@ -42,8 +42,7 @@ class ProductImportMapper(Component):
 
     @mapping
     def type(self, record):
-        if record['Type'] == 'simple':
-            return {'type': 'product'}
+        return {'type': 'product'}
 
     @mapping
     def categories(self, record):
@@ -53,6 +52,11 @@ class ProductImportMapper(Component):
     def uom(self, record):
         return {'categ_id': self.backend_record.default_uom_id.id}
 
+    @mapping
+    def magento_product_id(self, record):
+        if 'ProductID' in record:
+            return {'magento_product_id': record['ProductID']}
+
 
 class ProductImporter(Component):
     _name = 'magento.product.product.importer'
@@ -60,14 +64,18 @@ class ProductImporter(Component):
     _apply_on = ['magento.product.product']
 
     def _build_magento_data(self, post=None):
-        product = post['data']['Product']
-        product.pop('Warehouses')
-        product.update({'request_id': post['data']['request_id']})
+        product = {}
+        if 'data' in post:
+            product = post['data']['Product']
+            product.pop('Warehouses')
+            product.update({'request_id': post['data']['request_id']})
+        elif 'product_from_order' in post and post['product_from_order'] == True:
+            product = post
         return product
 
     def run(self, post=None):
         self.magento_record = self._build_magento_data(post=post)
-        self.external_id = self.magento_record['ProductID']
+        self.external_id = self.magento_record['SKU']
         lock_name = 'import({}, {}, {}, {})'.format(
             self.backend_record._name,
             self.backend_record.id,
@@ -91,7 +99,7 @@ class ProductImporter(Component):
             record = self._create_data(map_record)
             binding = self._create(record)
 
-        self.binder.bind(self.magento_record['ProductID'], binding)
+        self.binder.bind(self.magento_record['SKU'], binding)
         return self._result_message(binding.request_id,
                                     binding.external_id,
                                     binding.odoo_id.id)

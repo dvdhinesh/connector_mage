@@ -60,8 +60,9 @@
             <form string="Magento Product">
                 <group>
                     <field name="backend_id"/>
-                    <field name="external_id"/>
+                    <field name="external_id" string="Magento SKU"/>
                     <field name="request_id"/>
+                    <field name="magento_product_id"/>
                 </group>
             </form>
         </field>
@@ -73,8 +74,9 @@
         <field name="arch" type="xml">
             <tree string="Magento Product">
                 <field name="backend_id"/>
-                <field name="external_id"/>
+                <field name="external_id" string="Magento SKU"/>
                 <field name="request_id"/>
+                <field name="magento_product_id"/>
             </tree>
         </field>
     </record>

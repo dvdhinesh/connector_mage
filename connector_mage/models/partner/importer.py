@@ -67,8 +67,12 @@ class PartnerImporter(Component):
     _apply_on = 'magento.res.partner'
 
     def _build_magento_data(self, post=None):
-        partner = post['Customer']
-        partner.update({'request_id': partner['request_id']})
+        partner = {}
+        if 'Customer' in post:
+            partner = post['Customer']
+            partner.update({'request_id': partner['request_id']})
+        elif 'partner_from_order' in post and post['partner_from_order'] == True:
+            partner = post
         return partner
 
     def run(self, post=None):
