@@ -49,12 +49,12 @@ class SaleOrderImportMapper(Component):
 
     children = [('order_lines', 'magento_order_line_ids', 'magento.sale.order.line'),
                 ]
-    
+
     def _get_shipping_product(self, carrier_code):
         carrier = self.env['delivery.carrier'].search(
-                [('magento_code', '=', carrier_code)],
-                limit=1,
-            )
+            [('magento_code', '=', carrier_code)],
+            limit=1,
+        )
         if carrier:
             product = carrier.product_id
         else:
@@ -66,7 +66,7 @@ class SaleOrderImportMapper(Component):
                 'magento_code': carrier_code})
             product = carrier.product_id
         return product
-    
+
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
         shipments = record['Shipments']['Shipment']
@@ -75,7 +75,8 @@ class SaleOrderImportMapper(Component):
         for shipment in shipments:
             line_builder = self.component(usage='order.line.builder.shipping')
             line_builder.price_unit = float(shipment['Fee'] or 0.0)
-            line_builder.product = self._get_shipping_product(shipment['PostageType'])
+            line_builder.product = self._get_shipping_product(
+                shipment['PostageType'])
             line = (0, 0, line_builder.get_line())
             values['order_line'].append(line)
         return values
@@ -83,16 +84,16 @@ class SaleOrderImportMapper(Component):
     def finalize(self, map_record, values):
         values.setdefault('order_line', [])
         values = self._add_shipping_line(map_record, values)
-#         values.update({
-#             'partner_id': self.options.partner_id,
-#             'partner_invoice_id': self.options.partner_invoice_id,
-#             'partner_shipping_id': self.options.partner_shipping_id,
-#         })
+        values.update({
+            'partner_id': values['partner_id'],
+            'partner_invoice_id': self.options['invoice_address_id'],
+            'partner_shipping_id': self.options['shipping_address_id'],
+        })
         onchange = self.component(
             usage='ecommerce.onchange.manager.sale.order'
         )
         return onchange.play(values, values['magento_order_line_ids'])
-    
+
     @mapping
     def shipping_method(self, record):
         return {'carrier_id': False}
@@ -164,7 +165,8 @@ class SaleOrderImporter(Component):
         })
         importer = self.component(usage='record.importer',
                                   model_name='magento.res.partner')
-        addresses = importer.run(post=partner, expects_address=True)
+        self.invoice_address_id, self.shipping_address_id = importer.run(
+            post=partner, expects_address=True)
 
         lines = record['OrderItems']['OrderItem']
         if isinstance(lines, dict):  # Single line dict, multiple lines list
@@ -179,25 +181,6 @@ class SaleOrderImporter(Component):
             importer = self.component(usage='record.importer',
                                       model_name='magento.product.product')
             importer.run(post=line)
-            
-#     def _after_import(self, partner_binding, magento_record):
-#         """ Import the addresses """
-#         shipping_address = {
-#             'magento_address_name': ' '.join([part for part in (
-#                 magento_record['ShippingName'], magento_record['ShippingLastName']
-#                 ) if part]),
-#             'magento_address': magento_record['ShippingAddress'],
-#             'magento_city': magento_record['ShippingCity'],
-#             'magento_state': magento_record['ShippingState'],
-#             'magento_state_code': magento_record['ShippingStateCode'],
-#             'magento_zip': magento_record['ShippingZipCode'],
-#             'magento_country_code': magento_record['ShippingCountryCode'],
-#             'odoo_address_type': 'delivery',
-#             }
-#         magento_record.update(shipping_address)
-#         book = self.component(usage='address.book',
-#                               model_name='magento.address')
-#         book.import_addresses(partner_binding, magento_record)
 
     def run(self, post=None):
         self.magento_record = self._build_magento_data(post=post)
@@ -226,14 +209,17 @@ class SaleOrderImporter(Component):
         map_record = self._map_data()
 
         if binding:
-            record = self._update_data(map_record)
+            record = self._update_data(map_record,
+                                       invoice_address_id=self.invoice_address_id,
+                                       shipping_address_id=self.shipping_address_id)
             self._update(binding, record)
         else:
-            record = self._create_data(map_record)
+            record = self._create_data(map_record,
+                                       invoice_address_id=self.invoice_address_id,
+                                       shipping_address_id=self.shipping_address_id)
             binding = self._create(record)
 
         self.binder.bind(self.magento_record['OrderID'], binding)
-#         self._after_import(binding, self.magento_record)
         return self._result_message(binding.request_id,
                                     binding.external_id,
                                     binding.odoo_id.id)
@@ -254,10 +240,6 @@ class SaleOrderLineImportMapper(Component):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-
-#     @mapping
-#     def tax(self, record):
-#         return {'tax_id': [(4, self.backend_record.default_tax_id.id)]}
 
     @mapping
     def product_id(self, record):

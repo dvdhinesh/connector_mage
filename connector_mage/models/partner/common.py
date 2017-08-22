@@ -31,8 +31,8 @@ class MagentoResPartner(models.Model):
                               required=True,
                               ondelete='cascade')
     request_id = fields.Char(string="Request ID")
-    
-    
+
+
 class MagentoAddress(models.Model):
     _name = 'magento.address'
     _inherit = 'magento.binding'

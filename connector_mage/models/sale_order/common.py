@@ -20,7 +20,7 @@ class MagentoSaleOrder(models.Model):
         string='Magento Order Lines'
     )
     magento_order_id = fields.Char(string='Magento Order ID',
-                                      help="'order_id' field in Magento")
+                                   help="'order_id' field in Magento")
 
 
 class SaleOrder(models.Model):

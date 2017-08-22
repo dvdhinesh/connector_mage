@@ -59,7 +59,7 @@ class PartnerImportMapper(Component):
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-    
+
 
 class PartnerImporter(Component):
     _name = 'magento.partner.importer'
@@ -74,13 +74,13 @@ class PartnerImporter(Component):
         elif 'partner_from_order' in post and post['partner_from_order'] == True:
             partner = post
         return partner
-    
+
     def _after_import(self, partner_binding, magento_record):
         """ Import the addresses """
         invoice_address = {
             'magento_address_name': ' '.join([part for part in (
                 magento_record['Name'], magento_record['LastName']
-                ) if part]),
+            ) if part]),
             'magento_address': magento_record['Address'],
             'magento_city': magento_record['City'],
             'magento_state': magento_record['State'],
@@ -88,19 +88,20 @@ class PartnerImporter(Component):
             'magento_zip': magento_record['ZipCode'],
             'magento_country_code': magento_record['CountryCode'],
             'odoo_address_type': 'invoice',
-            }
+        }
         magento_record.update(invoice_address)
         book = self.component(usage='address.book',
                               model_name='magento.address')
-        invoice_address_id = book.import_addresses(partner_binding, magento_record)
+        invoice_address_id = book.import_addresses(
+            partner_binding, magento_record)
         if invoice_address_id:
             self.invoice_address_id = invoice_address_id
-        
+
         if 'partner_from_order' in magento_record and magento_record['partner_from_order'] == True:
             shipping_address = {
                 'magento_address_name': ' '.join([part for part in (
                     magento_record['ShippingName'], magento_record['ShippingLastName']
-                    ) if part]),
+                ) if part]),
                 'magento_address': magento_record['ShippingAddress'],
                 'magento_city': magento_record['ShippingCity'],
                 'magento_state': magento_record['ShippingState'],
@@ -108,11 +109,12 @@ class PartnerImporter(Component):
                 'magento_zip': magento_record['ShippingZipCode'],
                 'magento_country_code': magento_record['ShippingCountryCode'],
                 'odoo_address_type': 'delivery',
-                }
+            }
             magento_record.update(shipping_address)
             book = self.component(usage='address.book',
                                   model_name='magento.address')
-            shipping_address_id = book.import_addresses(partner_binding, magento_record)
+            shipping_address_id = book.import_addresses(
+                partner_binding, magento_record)
             if shipping_address_id:
                 self.shipping_address_id = shipping_address_id
 
@@ -146,12 +148,12 @@ class PartnerImporter(Component):
         self.binder.bind(self.magento_record['CustomerID'], binding)
         self._after_import(binding, self.magento_record)
         if expects_address:
-            return
+            return (self.invoice_address_id, self.shipping_address_id)
         return self._result_message(binding.request_id,
                                     binding.external_id,
                                     binding.odoo_id.id)
-        
-        
+
+
 class PartnerAddressBook(Component):
     _name = 'magento.address.book'
     _inherit = 'base.magento.connector'
@@ -160,27 +162,28 @@ class PartnerAddressBook(Component):
 
     def import_addresses(self, partner_binding, magento_record):
         odoo_address_type = magento_record['odoo_address_type']
-        magento_address_name =  magento_record['magento_address_name']
+        magento_address_name = magento_record['magento_address_name']
         magento_address = magento_record['magento_address']
         magento_city = magento_record['magento_city']
         magento_state = magento_record['magento_state']
         magento_state_code = magento_record['magento_state_code']
         magento_zip = magento_record['magento_zip']
         magento_country_code = magento_record['magento_country_code']
-        country = self.env['res.country'].search([('code', '=', magento_country_code)])
+        country = self.env['res.country'].search(
+            [('code', '=', magento_country_code)])
         if magento_state and not magento_state_code:
             magento_state_code = magento_state
         state = self.env['res.country.state'].search(
-            [('name', '=', magento_state), 
+            [('name', '=', magento_state),
              ('code', '=', magento_state_code),
              ('country_id', '=', country.id)]
         )
         if not state:
             state = self.env['res.country.state'].create({
-                    'name': magento_state,
-                    'code': magento_state_code,
-                    'country_id': country.id
-                })
+                'name': magento_state,
+                'code': magento_state_code,
+                'country_id': country.id
+            })
         address = self.env['magento.address'].search(
             [('type', '=', odoo_address_type),
              ('is_company', '=', False),
@@ -194,17 +197,16 @@ class PartnerAddressBook(Component):
         )
         if not address:
             address = self.env['magento.address'].create({
-                    'request_id': magento_record['request_id'],
-                    'backend_id': self.backend_record.id,
-                    'parent_id': partner_binding.odoo_id.id,
-                    'type': odoo_address_type,
-                    'name': magento_address_name,
-                    'is_company': False,
-                    'street': magento_address,
-                    'city': magento_city,
-                    'state_id': state.id,
-                    'zip': magento_zip,
-                    'country_id': country.id
-                })
+                'request_id': magento_record['request_id'],
+                'backend_id': self.backend_record.id,
+                'parent_id': partner_binding.odoo_id.id,
+                'type': odoo_address_type,
+                'name': magento_address_name,
+                'is_company': False,
+                'street': magento_address,
+                'city': magento_city,
+                'state_id': state.id,
+                'zip': magento_zip,
+                'country_id': country.id
+            })
         return address.odoo_id.id
-        
