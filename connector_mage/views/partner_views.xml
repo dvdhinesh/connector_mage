@@ -13,6 +13,9 @@
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1"/>
                 </group>
+                <group string="Magento Address Bindings">
+                    <field name="magento_address_bind_ids" nolabel="1"/>
+                </group>
             </page>
         </field>
     </record>
@@ -40,6 +43,32 @@
                    delete="false">
                 <field name="backend_id"/>
                 <field name="external_id"/>
+                <field name="request_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_magento_address_form" model="ir.ui.view">
+        <field name="name">magento.address.form</field>
+        <field name="model">magento.address</field>
+        <field name="arch" type="xml">
+            <form string="Magento Address" create="false"
+                   delete="false">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="request_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_address_tree" model="ir.ui.view">
+        <field name="name">magento.address.tree</field>
+        <field name="model">magento.address</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Address" create="false"
+                   delete="false">
+                <field name="backend_id"/>
                 <field name="request_id"/>
             </tree>
         </field>

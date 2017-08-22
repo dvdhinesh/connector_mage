@@ -19,7 +19,7 @@ class MagentoSaleOrder(models.Model):
         inverse_name='magento_order_id',
         string='Magento Order Lines'
     )
-    magento_order_id = fields.Integer(string='Magento Order ID',
+    magento_order_id = fields.Char(string='Magento Order ID',
                                       help="'order_id' field in Magento")
 
 

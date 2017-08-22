@@ -11,6 +11,11 @@ class ResPartner(models.Model):
         inverse_name='odoo_id',
         string="Magento Bindings",
     )
+    magento_address_bind_ids = fields.One2many(
+        comodel_name='magento.address',
+        inverse_name='odoo_id',
+        string="Magento Address Bindings",
+    )
 
 
 class MagentoResPartner(models.Model):
@@ -20,6 +25,21 @@ class MagentoResPartner(models.Model):
     _description = 'Magento Partner'
 
     _rec_name = 'name'
+
+    odoo_id = fields.Many2one(comodel_name='res.partner',
+                              string='Partner',
+                              required=True,
+                              ondelete='cascade')
+    request_id = fields.Char(string="Request ID")
+    
+    
+class MagentoAddress(models.Model):
+    _name = 'magento.address'
+    _inherit = 'magento.binding'
+    _inherits = {'res.partner': 'odoo_id'}
+    _description = 'Magento Address'
+
+    _rec_name = 'backend_id'
 
     odoo_id = fields.Many2one(comodel_name='res.partner',
                               string='Partner',

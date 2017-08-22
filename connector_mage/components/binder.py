@@ -8,6 +8,7 @@ class MagentoModelBinder(Component):
     _inherit = ['base.binder', 'base.magento.connector']
     _apply_on = [
         'magento.res.partner',
+        'magento.address',
         'magento.product.product',
         'magento.sale.order',
         'magento.sale.order.line',
