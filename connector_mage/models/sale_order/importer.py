@@ -95,6 +95,18 @@ class SaleOrderImportMapper(Component):
         return onchange.play(values, values['magento_order_line_ids'])
 
     @mapping
+    def payment(self, record):
+        record_method = record['PaymentDetails']
+        method = self.env['account.payment.mode'].search(
+            [['name', '=', record_method]],
+            limit=1,
+        )
+        assert method, ("method %s should exist because the import fails "
+                        "in SaleOrderImporter._before_import when it is "
+                        " missing" % record['PaymentDetails'])
+        return {'payment_mode_id': method.id}
+
+    @mapping
     def shipping_method(self, record):
         return {'carrier_id': False}
 

@@ -4,6 +4,7 @@ import logging
 
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping, only_create
+from odoo.addons.queue_job.exception import FailedJobError
 
 _logger = logging.getLogger(__name__)
 
@@ -169,19 +170,21 @@ class PartnerAddressBook(Component):
         magento_state_code = magento_record['magento_state_code']
         magento_zip = magento_record['magento_zip']
         magento_country_code = magento_record['magento_country_code']
-        country = self.env['res.country'].search(
-            [('code', '=', magento_country_code)])
-        if magento_state and not magento_state_code:
-            magento_state_code = magento_state
-        state = self.env['res.country.state'].search(
-            [('name', '=', magento_state),
-             ('code', '=', magento_state_code),
-             ('country_id', '=', country.id)]
-        )
+        country = self.env['res.country'].search([('code', '=', magento_country_code)])
+        if magento_state:
+            state = self.env['res.country.state'].search(
+                [('name', '=', magento_state),
+                 ('country_id', '=', country.id)]
+            )
+            if magento_state_code and not state:
+                state = self.env['res.country.state'].search(
+                    [('code', '=', magento_state_code),
+                     ('country_id', '=', country.id)]
+                )
         if not state:
             state = self.env['res.country.state'].create({
                 'name': magento_state,
-                'code': magento_state_code,
+                'code': magento_state_code or magento_state,
                 'country_id': country.id
             })
         address = self.env['magento.address'].search(
