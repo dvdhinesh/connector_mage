@@ -17,6 +17,7 @@ class PartnerImportMapper(Component):
     direct = [
         ('request_id', 'request_id'),
         ('Email', 'email'),
+        ('Phone', 'phone'),
     ]
 
     @only_create
@@ -170,7 +171,8 @@ class PartnerAddressBook(Component):
         magento_state_code = magento_record['magento_state_code']
         magento_zip = magento_record['magento_zip']
         magento_country_code = magento_record['magento_country_code']
-        country = self.env['res.country'].search([('code', '=', magento_country_code)])
+        country = self.env['res.country'].search(
+            [('code', '=', magento_country_code)])
         if magento_state:
             state = self.env['res.country.state'].search(
                 [('name', '=', magento_state),

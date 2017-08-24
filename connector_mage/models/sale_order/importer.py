@@ -15,7 +15,7 @@ class SaleImportRule(Component):
     def _rule_always(self, record, method):
         return True
 
-    _rules = {'always': _rule_always, }
+    _rules = {'always': _rule_always}
 
     def check(self, record):
         payment_method = record['PaymentDetails']

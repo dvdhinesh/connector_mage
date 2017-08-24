@@ -8,11 +8,7 @@ class MagentoBackend(models.Model):
     _description = 'Magento Backend'
     _inherit = 'connector.backend'
 
-    @api.model
-    def select_versions(self):
-        return [('1.7', '1.7+')]
-
-    version = fields.Selection(selection='select_versions', required=True)
+    base_backend = fields.Boolean('Base Backend?', defaut=True)
     default_category_id = fields.Many2one(
         comodel_name='product.category',
         string='Default Product Category',
@@ -25,13 +21,6 @@ class MagentoBackend(models.Model):
         help='This UOM will be used for products imported'
              'from Magento.',
     )
-    default_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-        string='Default Sale Order Line Tax',
-        help='This Tax will be used for sale order lines'
-             'from Magento.',
-    )
-    base_backend = fields.Boolean('Base Backend?', defaut=True)
     default_mage_image_url = fields.Char(
         string='Magento Product Image Path',
         help="Url to magento product image path",
