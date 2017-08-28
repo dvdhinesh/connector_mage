@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Magento Connector',
+    'name': 'Connector Magento',
     'version': '10.0.1.0.0',
     'author': 'Dhinesh D',
     'category': 'Connector',
+    'license': 'LGPL-3',
     'depends': [
                 'product',
                 'delivery',
