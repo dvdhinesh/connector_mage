@@ -3,6 +3,7 @@
 from odoo import _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from ...components.mapper import normalize_datetime
 from odoo.addons.queue_job.exception import FailedJobError, NothingToDoJob
 
 
@@ -45,6 +46,13 @@ class SaleOrderImportMapper(Component):
     direct = [
         ('request_id', 'request_id'),
         ('OrderID', 'magento_order_id'),
+        ('TotalOrderAmount', 'total_amount'),
+        (normalize_datetime('CreatedDate'), 'date_order'),
+        ('CustomerIP', 'magento_customer_ip'),
+        ('PaymentDetails', 'payment_details'),
+        ('PaymentFee', 'payment_fee'),
+        (normalize_datetime('PaidDate'), 'paid_date'),
+        ('TransactionResult', 'transation_result'),
     ]
 
     children = [('order_lines', 'magento_order_line_ids', 'magento.sale.order.line'),
@@ -137,6 +145,11 @@ class SaleOrderImportMapper(Component):
         """ Do not assign to a Salesperson otherwise sales orders are hidden
         for the salespersons (access rules)"""
         return {'user_id': False}
+
+    @mapping
+    def high_risk_country(self, record):
+        if record['HighRiskCountry'] == 'Y':
+            return {'high_risk_country': True}
 
 
 class SaleOrderImporter(Component):

@@ -16,6 +16,8 @@ class ResPartner(models.Model):
         inverse_name='odoo_id',
         string="Magento Address Bindings",
     )
+    magento_state = fields.Char(string='Magento State')
+    magento_company_name = fields.Char(string='Magento Company Name')
 
 
 class MagentoResPartner(models.Model):

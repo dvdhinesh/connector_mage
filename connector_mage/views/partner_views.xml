@@ -17,6 +17,16 @@
                     <field name="magento_address_bind_ids" nolabel="1"/>
                 </group>
             </page>
+            <xpath expr="//div[@class='oe_title']" position="inside">
+            	<field name="magento_company_name" placeholder="Magento Company Name"
+     					attrs="{'invisible':[('magento_company_name','=',False)]}" />
+            </xpath>
+            <field name="country_id" position="before">
+				<field name="magento_state" class="o_address_state" placeholder="Magento State"/>
+			</field>
+			<xpath expr="//field[@name='child_ids']//form//field[@name='country_id']" position="before">
+				<field name="magento_state" class="o_address_state" placeholder="Magento State"/>
+			</xpath>
         </field>
     </record>
 

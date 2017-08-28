@@ -14,6 +14,9 @@
                     <field name="magento_bind_ids" nolabel="1"/>
                 </group>
             </page>
+            <field name="partner_shipping_id" position="after">
+            	<field name="high_risk_country"/>
+            </field>
         </field>
     </record>
 
@@ -23,10 +26,35 @@
         <field name="arch" type="xml">
             <form string="Magento Sales Orders"
                     create="false" delete="false">
+                <separator string="Others"/>
                 <group>
-                    <field name="backend_id"/>
-                    <field name="external_id"/>
-                    <field name="request_id"/>
+                	<group>
+                		<field name="total_amount"/>
+                	</group>
+                	<group>
+                		<field name="magento_customer_ip"/>
+                	</group>
+                </group>
+                <separator string="Payment Details"/>
+                <group>
+                	<group>
+                		<field name="payment_details"/>
+                		<field name="transation_result"/>
+                	</group>
+                	<group>
+                		<field name="payment_fee"/>
+                		<field name="paid_date"/>
+                	</group>
+                </group>
+                <separator string="Bindings"/>
+                <group>
+                	<group>
+                		<field name="backend_id"/>
+                    	<field name="external_id"/>
+                	</group>
+                	<group>
+                		<field name="request_id"/>
+                	</group>
                 </group>
             </form>
         </field>
@@ -41,6 +69,7 @@
                 <field name="backend_id"/>
                 <field name="external_id"/>
                 <field name="request_id"/>
+                <field name="total_amount"/>
             </tree>
         </field>
     </record>

@@ -18,6 +18,7 @@ class PartnerImportMapper(Component):
         ('request_id', 'request_id'),
         ('Email', 'email'),
         ('Phone', 'phone'),
+        ('CompanyName', 'magento_company_name'),
     ]
 
     @only_create
@@ -167,28 +168,19 @@ class PartnerAddressBook(Component):
         magento_address_name = magento_record['magento_address_name']
         magento_address = magento_record['magento_address']
         magento_city = magento_record['magento_city']
-        magento_state = magento_record['magento_state']
-        magento_state_code = magento_record['magento_state_code']
+        magento_state_name = magento_record['magento_state']
         magento_zip = magento_record['magento_zip']
         magento_country_code = magento_record['magento_country_code']
+        magento_state = False
+        state = False
         country = self.env['res.country'].search(
             [('code', '=', magento_country_code)])
-        if magento_state:
+        if magento_state_name:
+            # try to find the state in odoo
             state = self.env['res.country.state'].search(
-                [('name', '=', magento_state),
-                 ('country_id', '=', country.id)]
-            )
-            if magento_state_code and not state:
-                state = self.env['res.country.state'].search(
-                    [('code', '=', magento_state_code),
-                     ('country_id', '=', country.id)]
-                )
-        if not state:
-            state = self.env['res.country.state'].create({
-                'name': magento_state,
-                'code': magento_state_code or magento_state,
-                'country_id': country.id
-            })
+                [('name', '=ilike', magento_state_name)])
+            if not state:
+                magento_state = magento_state_name  # retain the info from magento
         address = self.env['magento.address'].search(
             [('type', '=', odoo_address_type),
              ('is_company', '=', False),
@@ -210,7 +202,8 @@ class PartnerAddressBook(Component):
                 'is_company': False,
                 'street': magento_address,
                 'city': magento_city,
-                'state_id': state.id,
+                'state_id': state and state.id or False,
+                'magento_state': magento_state,
                 'zip': magento_zip,
                 'country_id': country.id
             })

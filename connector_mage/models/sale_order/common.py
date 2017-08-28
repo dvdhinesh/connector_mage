@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import odoo.addons.decimal_precision as dp
+
 from odoo import models, fields, api
 
 
@@ -20,7 +22,17 @@ class MagentoSaleOrder(models.Model):
         string='Magento Order Lines'
     )
     magento_order_id = fields.Char(string='Magento Order ID',
-                                   help="'order_id' field in Magento")
+                                   help="'OrderID' field in XML")
+    total_amount = fields.Float(
+        string='Total amount',
+        digits=dp.get_precision('Account')
+    )
+    payment_details = fields.Char(string='Payment Details')
+    payment_fee = fields.Char(string='Payment Fee')
+    paid_date = fields.Datetime(string='Paid Date')
+    transation_result = fields.Char(string='Transaction Result')
+    magento_customer_ip = fields.Char(string='Magento Customer IP',
+                                      help="'CustomerIP' field in XML")
 
 
 class SaleOrder(models.Model):
@@ -31,6 +43,7 @@ class SaleOrder(models.Model):
         inverse_name='odoo_id',
         string="Magento Bindings",
     )
+    high_risk_country = fields.Boolean(string="High Risk Country?")
 
 
 class MagentoSaleOrderLine(models.Model):
