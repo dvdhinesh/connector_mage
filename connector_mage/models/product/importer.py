@@ -4,6 +4,16 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 
 
+MAGENTO_ATTRIBUTE_SET = {
+    'Battery': 'battery',
+    'Motor': 'motor',
+    'Plane': 'plane',
+    'Propeller': 'propeller',
+    'Servo': 'servo',
+    'Others': 'others',
+}
+
+
 class ProductImportMapper(Component):
     _name = 'magento.product.product.import.mapper'
     _inherit = 'magento.import.mapper'
@@ -30,6 +40,10 @@ class ProductImportMapper(Component):
         ('ShowInPO', 'show_in_po'),
         ('ProductImageURL', 'magento_product_image_url'),
         ('ProductURL', 'magento_product_url'),
+        ('ManufSKU', 'manuf_sku'),
+        ('Type', 'magento_product_type'),
+        ('HSCategory', 'hs_category'),
+        ('ERPCategory', 'erp_category'),
     ]
 
     @mapping
@@ -56,6 +70,236 @@ class ProductImportMapper(Component):
     def magento_product_id(self, record):
         if 'ProductID' in record:
             return {'magento_product_id': record['ProductID']}
+
+    @mapping
+    def attribute_set(self, record):
+        return {'magento_attribute_set':
+                MAGENTO_ATTRIBUTE_SET.get(record['AttributeSet'], False)}
+
+    @mapping
+    def battery_capacity(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_capacity': record['Attributes']['Capacity']}
+
+    @mapping
+    def battery_discharge(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_discharge': record['Attributes']['Discharge']}
+
+    @mapping
+    def battery_heightb(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_heightb': record['Attributes']['HeightB']}
+
+    @mapping
+    def battery_widthc(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_widthc': record['Attributes']['WidthC']}
+
+    @mapping
+    def battery_unitweight(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_unitweight': record['Attributes']['UnitWeight']}
+
+    @mapping
+    def battery_max_charge_rate(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_max_charge_rate': record['Attributes']['MaxChargeRate']}
+
+    @mapping
+    def battery_watt_hour(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_watt_hour': record['Attributes']['WattHour']}
+
+    @mapping
+    def battery_config(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_config': record['Attributes']['Config']}
+
+    @mapping
+    def battery_discharge_plug(self, record):
+        if record['AttributeSet'] == 'Battery':
+            return {'battery_discharge_plug': record['Attributes']['DischargePlug']}
+
+    @mapping
+    def battery_islipo(self, record):
+        if record['AttributeSet'] == 'Battery' and record['Attributes']['IsLipo'] == 'Yes':
+            return {'battery_islipo': 1}
+
+    @mapping
+    def motor_kv(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_kv': record['Attributes']['Kv']}
+
+    @mapping
+    def motor_max_current(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_max_current': record['Attributes']['MaxCurrent']}
+
+    @mapping
+    def motor_powerw(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_powerw': record['Attributes']['PowerW']}
+
+    @mapping
+    def motor_lengthb(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_lengthb': record['Attributes']['LengthB']}
+
+    @mapping
+    def motor_can_lengthd(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_can_lengthd': record['Attributes']['CanLenghtD']}
+
+    @mapping
+    def motor_max_voltage(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_max_voltage': record['Attributes']['MaxVoltage']}
+
+    @mapping
+    def motor_shafta(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_shafta': record['Attributes']['ShaftA']}
+
+    @mapping
+    def motor_unit_weight(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_unit_weight': record['Attributes']['UnitWeight']}
+
+    @mapping
+    def motor_diameterc(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_diameterc': record['Attributes']['DiameterC']}
+
+    @mapping
+    def motor_total_lengthe(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_total_lengthe': record['Attributes']['TotalLenghtE']}
+
+    @mapping
+    def motor_resistance(self, record):
+        if record['AttributeSet'] == 'Motor':
+            return {'motor_resistance': record['Attributes']['Resistance']}
+
+    @mapping
+    def plane_channels(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_channels': record['Attributes']['Channels']}
+
+    @mapping
+    def plane_motorsize(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_motorsize': record['Attributes']['Motorsize']}
+
+    @mapping
+    def plane_wingspan(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_wingspan': record['Attributes']['Wingspan']}
+
+    @mapping
+    def plane_lengthmm(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_lengthmm': record['Attributes']['LengthMm']}
+
+    @mapping
+    def plane_saleweight(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_saleweight': record['Attributes']['SaleWeight']}
+
+    @mapping
+    def plane_airframe(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_airframe': record['Attributes']['Airframe']}
+
+    @mapping
+    def plane_frame_pnfrtf(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_frame_pnfrtf': record['Attributes']['FramePnfRtf']}
+
+    @mapping
+    def plane_ic_elec(self, record):
+        if record['AttributeSet'] == 'Plane':
+            return {'plane_ic_elec': record['Attributes']['IcElec']}
+
+    @mapping
+    def propeller_pitchy(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_pitchy': record['Attributes']['PitchY']}
+
+    @mapping
+    def propeller_material(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_material': record['Attributes']['Material']}
+
+    @mapping
+    def propeller_rotation(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_rotation': record['Attributes']['Rotation']}
+
+    @mapping
+    def propeller_unitweight(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_unitweight': record['Attributes']['UnitWeight']}
+
+    @mapping
+    def propeller_type(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_type': record['Attributes']['PropellerType']}
+
+    @mapping
+    def propeller_blade_count(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_blade_count': record['Attributes']['BladeCount']}
+
+    @mapping
+    def propeller_diameterx(self, record):
+        if record['AttributeSet'] == 'Propeller':
+            return {'propeller_diameterx': record['Attributes']['DiameterX']}
+
+    @mapping
+    def servo_speed(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_speed': record['Attributes']['Speed']}
+
+    @mapping
+    def servo_torque(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_torque': record['Attributes']['Torque']}
+
+    @mapping
+    def servo_unitweight(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_unitweight': record['Attributes']['UnitWeight']}
+
+    @mapping
+    def servo_amm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_amm': record['Attributes']['Amm']}
+
+    @mapping
+    def servo_bmm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_bmm': record['Attributes']['Bmm']}
+
+    @mapping
+    def servo_cmm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_cmm': record['Attributes']['Cmm']}
+
+    @mapping
+    def servo_dmm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_dmm': record['Attributes']['Dmm']}
+
+    @mapping
+    def servo_emm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_emm': record['Attributes']['Emm']}
+
+    @mapping
+    def servo_fmm(self, record):
+        if record['AttributeSet'] == 'Servo':
+            return {'servo_fmm': record['Attributes']['Fmm']}
 
 
 class ProductImporter(Component):
