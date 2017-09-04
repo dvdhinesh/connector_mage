@@ -8,8 +8,18 @@
         <field name="arch" type="xml">
             <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
+                <attribute name="string">Magento</attribute>
             </page>
             <page name="connector" position="inside">
+            	<group string="Magento Data">
+            		<group>
+	            		<field name="magento_member_club"/>
+	            		<field name="magento_active"/>
+            		</group>
+            		<group>
+	            		<field name="magento_passport_number"/>
+            		</group>
+                </group>
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1"/>
                 </group>
@@ -22,9 +32,11 @@
      					attrs="{'invisible':[('magento_company_name','=',False)]}" />
             </xpath>
             <field name="country_id" position="before">
+            	<field name="magento_suburb" class="o_address_state" placeholder="Magento SubUrb"/>
 				<field name="magento_state" class="o_address_state" placeholder="Magento State"/>
 			</field>
 			<xpath expr="//field[@name='child_ids']//form//field[@name='country_id']" position="before">
+				<field name="magento_suburb" class="o_address_state" placeholder="Magento SubUrb"/>
 				<field name="magento_state" class="o_address_state" placeholder="Magento State"/>
 			</xpath>
 			<xpath expr="//page[@name='sales_purchases']//field[@name='supplier']" position="after">

@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <page name="connector" position="attributes">
                 <attribute name="invisible">0</attribute>
+                <attribute name="string">Magento</attribute>
             </page>
             <page name="connector" position="inside">
                 <group string="Magento Bindings">
@@ -16,6 +17,7 @@
             </page>
             <field name="partner_shipping_id" position="after">
             	<field name="high_risk_country"/>
+            	<field name="declared_percentage"/>
             </field>
         </field>
     </record>

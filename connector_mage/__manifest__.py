@@ -19,6 +19,7 @@
         'views/magento_backend_views.xml',
         'views/product_views.xml',
         'views/partner_views.xml',
+        'views/product_category_views.xml',
         'views/delivery_views.xml',
         'views/sale_order_views.xml',
         'views/connector_magento_menu.xml',

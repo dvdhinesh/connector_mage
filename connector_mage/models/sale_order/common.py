@@ -43,7 +43,8 @@ class SaleOrder(models.Model):
         inverse_name='odoo_id',
         string="Magento Bindings",
     )
-    high_risk_country = fields.Boolean(string="High Risk Country?")
+    high_risk_country = fields.Boolean(string='High Risk Country?')
+    declared_percentage = fields.Char(string='Declared Percentage')
 
 
 class MagentoSaleOrderLine(models.Model):

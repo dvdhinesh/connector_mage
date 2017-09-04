@@ -19,6 +19,7 @@ class PartnerImportMapper(Component):
         ('Email', 'email'),
         ('Phone', 'phone'),
         ('CompanyName', 'magento_company_name'),
+        ('Active', 'magento_active'),
     ]
 
     @only_create
@@ -63,6 +64,25 @@ class PartnerImportMapper(Component):
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
 
+    @mapping
+    def magento_member_club(self, record):
+        if 'ForeignKeyofMemberClub' in record:
+            return {'magento_member_club': record['ForeignKeyofMemberClub']}
+
+    @mapping
+    def magento_passport_number(self, record):
+        if 'NorwayPassportNumber' in record:
+            return {'magento_passport_number': record['NorwayPassportNumber']}
+
+    @mapping
+    def category_id(self, record):
+        existing = self.env['res.partner.category'].search(
+            [('magento_customer_type', '=', record['CustomerType'])],
+            limit=1,
+        )
+        if existing:
+            return {'category_id': [(6, 0, [existing.id])]}
+
 
 class PartnerImporter(Component):
     _name = 'magento.partner.importer'
@@ -90,6 +110,7 @@ class PartnerImporter(Component):
             'magento_state_code': magento_record['StateCode'],
             'magento_zip': magento_record['ZipCode'],
             'magento_country_code': magento_record['CountryCode'],
+            'magento_suburb': magento_record['Suburb'],
             'odoo_address_type': 'invoice',
         }
         magento_record.update(invoice_address)
@@ -111,6 +132,7 @@ class PartnerImporter(Component):
                 'magento_state_code': magento_record['ShippingStateCode'],
                 'magento_zip': magento_record['ShippingZipCode'],
                 'magento_country_code': magento_record['ShippingCountryCode'],
+                'magento_suburb': magento_record['ShippingSuburb'],
                 'odoo_address_type': 'delivery',
             }
             magento_record.update(shipping_address)
@@ -171,6 +193,7 @@ class PartnerAddressBook(Component):
         magento_state_name = magento_record['magento_state']
         magento_zip = magento_record['magento_zip']
         magento_country_code = magento_record['magento_country_code']
+        magento_suburb = magento_record['magento_suburb']
         magento_state = False
         state = False
         country = self.env['res.country'].search(
@@ -189,6 +212,7 @@ class PartnerAddressBook(Component):
              ('city', '=', magento_city),
              ('state_id', '=', state.id),
              ('zip', '=', magento_zip),
+             ('magento_suburb', '=', magento_suburb),
              ('country_id', '=', country.id)],
             limit=1,
         )
@@ -204,6 +228,7 @@ class PartnerAddressBook(Component):
                 'city': magento_city,
                 'state_id': state and state.id or False,
                 'magento_state': magento_state,
+                'magento_suburb': magento_suburb,
                 'zip': magento_zip,
                 'country_id': country.id
             })

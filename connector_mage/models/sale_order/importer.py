@@ -53,6 +53,7 @@ class SaleOrderImportMapper(Component):
         ('PaymentFee', 'payment_fee'),
         (normalize_datetime('PaidDate'), 'paid_date'),
         ('TransactionResult', 'transation_result'),
+        ('DeclaredPercentage', 'declared_percentage'),
     ]
 
     children = [('order_lines', 'magento_order_line_ids', 'magento.sale.order.line'),
@@ -186,6 +187,7 @@ class SaleOrderImporter(Component):
             'ShippingState': record['ShippingState'],
             'ShippingStateCode': record['ShippingStateCode'],
             'ShippingZipCode': record['ShippingZipCode'],
+            'ShippingSuburb': record['ShippingSuburb'],
             'ShippingCountryCode': record['ShippingCountryCode']
         })
         importer = self.component(usage='record.importer',
