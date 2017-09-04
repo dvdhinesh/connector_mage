@@ -27,6 +27,9 @@
 			<xpath expr="//field[@name='child_ids']//form//field[@name='country_id']" position="before">
 				<field name="magento_state" class="o_address_state" placeholder="Magento State"/>
 			</xpath>
+			<xpath expr="//page[@name='sales_purchases']//field[@name='supplier']" position="after">
+				<field name="magento_supplier_id"/>
+			</xpath>
         </field>
     </record>
 

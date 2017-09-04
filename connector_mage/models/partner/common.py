@@ -18,6 +18,8 @@ class ResPartner(models.Model):
     )
     magento_state = fields.Char(string='Magento State')
     magento_company_name = fields.Char(string='Magento Company Name')
+    magento_supplier_id = fields.Char(string='Supplier ID on magento',
+                                      help="Used to add supplier on product from magento")
 
 
 class MagentoResPartner(models.Model):
