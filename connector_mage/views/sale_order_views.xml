@@ -11,6 +11,17 @@
                 <attribute name="string">Magento</attribute>
             </page>
             <page name="connector" position="inside">
+            	<group string="Magento Data">
+            		<group>
+	            		<field name="gift_card_amount"/>
+	            		<field name="store_credit_used"/>
+	            		<field name="discount_code"/>
+            		</group>
+            		<group>
+	            		<field name="reward_point_used"/>
+	            		<field name="reward_point_earned"/>
+            		</group>
+                </group>
                 <group string="Magento Bindings">
                     <field name="magento_bind_ids" nolabel="1"/>
                 </group>

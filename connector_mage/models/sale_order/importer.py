@@ -54,6 +54,11 @@ class SaleOrderImportMapper(Component):
         (normalize_datetime('PaidDate'), 'paid_date'),
         ('TransactionResult', 'transation_result'),
         ('DeclaredPercentage', 'declared_percentage'),
+        ('GiftCardAmount', 'gift_card_amount'),
+        ('StoreCreditUsed', 'store_credit_used'),
+        ('RewardPointsUsed', 'reward_point_used'),
+        ('RewardPointsEarned', 'reward_point_earned'),
+        ('DiscountCode', 'discount_code'),
     ]
 
     children = [('order_lines', 'magento_order_line_ids', 'magento.sale.order.line'),

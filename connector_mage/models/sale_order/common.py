@@ -45,6 +45,11 @@ class SaleOrder(models.Model):
     )
     high_risk_country = fields.Boolean(string='High Risk Country?')
     declared_percentage = fields.Char(string='Declared Percentage')
+    gift_card_amount = fields.Float(string='Gift Card Amount')
+    store_credit_used = fields.Float(string='Store Credit Used')
+    reward_point_used = fields.Float(string='Reward Point Used')
+    reward_point_earned = fields.Float(string='Reward Point Earned')
+    discount_code = fields.Char(string='Discount Code')
 
 
 class MagentoSaleOrderLine(models.Model):
