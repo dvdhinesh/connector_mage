@@ -6,5 +6,6 @@ from . import queue_job
 from . import delivery
 from . import product
 from . import partner
+from . import partner_rewards
 from . import sale_order
 from . import account_payment_mode

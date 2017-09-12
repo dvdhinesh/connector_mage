@@ -18,6 +18,8 @@
             		</group>
             		<group>
 	            		<field name="magento_passport_number"/>
+	            		<field name="magento_rewards_point"/>
+	            		<field name="magento_store_credit"/>
             		</group>
                 </group>
                 <group string="Magento Bindings">
@@ -25,6 +27,9 @@
                 </group>
                 <group string="Magento Address Bindings">
                     <field name="magento_address_bind_ids" nolabel="1"/>
+                </group>
+                <group string="Magento Rewards Bindings">
+                    <field name="magento_rewards_bind_ids" nolabel="1"/>
                 </group>
             </page>
             <xpath expr="//div[@class='oe_title']" position="inside">
@@ -95,6 +100,34 @@
                    delete="false">
                 <field name="backend_id"/>
                 <field name="request_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_magento_rewards_form" model="ir.ui.view">
+        <field name="name">magento.res.partner.rewards.form</field>
+        <field name="model">magento.res.partner.rewards</field>
+        <field name="arch" type="xml">
+            <form string="Magento Rewards" create="false"
+                   delete="false">
+                <group>
+                    <field name="backend_id"/>
+                    <field name="request_id"/>
+                    <field name="magento_date_modified"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_magento_rewards_tree" model="ir.ui.view">
+        <field name="name">magento.res.partner.rewards.tree</field>
+        <field name="model">magento.res.partner.rewards</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Rewards" create="false"
+                   delete="false">
+                <field name="backend_id"/>
+                <field name="request_id"/>
+                <field name="magento_date_modified"/>
             </tree>
         </field>
     </record>

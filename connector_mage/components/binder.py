@@ -9,6 +9,7 @@ class MagentoModelBinder(Component):
     _apply_on = [
         'magento.res.partner',
         'magento.address',
+        'magento.res.partner.rewards',
         'magento.product.product',
         'magento.sale.order',
         'magento.sale.order.line',
